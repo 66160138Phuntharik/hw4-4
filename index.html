@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบควิซออนไลน์</title>
+    <title>แบบทดสอบความรู้</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="container">
         <h1>Quizz</h1>
         <div class="quiz-container">
-            <p><strong>เวลาที่เหลือ:</strong> <span id="timer">180</span>วินาที</p>
+            <p><strong>⏳ เวลาที่เหลือ:</strong> <span id="timer">60</span> วินาที</p>
             <h2 id="question-text">กำลังโหลดคำถาม...</h2>
             <div id="choices" class="choices-container"></div>
             <button id="next-btn" class="btn" disabled>ถัดไป</button>
         </div>
 
         <div id="result-container" class="result-container">
-            <h2>ผลสอบ</h2>
+            <h2>คะแนนสอบ</h2>
             <p id="score"></p>
             <p id="status"></p>
             <div id="answer-sheet"></div>
-            <button id="result-btn" class="btn">ทำแบบทดสอบใหม่</button>
+            <button id="restart-btn" class="btn">ทำแบบทดสอบใหม่</button>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
