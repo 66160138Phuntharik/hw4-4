@@ -21,9 +21,9 @@ const allQuestions = [
     { id: 20, text: "อะไรคือที่อยู่ IP (IP Address)?", choices: ["เลขที่อยู่ของคอมพิวเตอร์ในเครือข่าย", "หน่วยความจำของ CPU", "โปรแกรมจัดการไฟล์", "รูปแบบการเข้ารหัส"], correct: "เลขที่อยู่ของคอมพิวเตอร์ในเครือข่าย" }
 ];
 
-// สุ่มคำถามอย่างน้อย 5 ข้อ จากทั้งหมด
+// สุ่มคำถาม 5 ข้อจากทั้งหมด
 const quiz = {
-    questions: allQuestions.sort(() => 0.5 - Math.random()).slice(0,5),
+    questions: allQuestions.sort(() => 0.5 - Math.random()).slice(0, 5),
     timeLimit: 60,
     passingScore: 60
 };
@@ -45,3 +45,121 @@ const statusText = document.getElementById("status");
 const resultContainer = document.getElementById("result-container");
 const timerDisplay = document.getElementById("timer");
 const answerSheet = document.getElementById("answer-sheet");
+
+// เริ่มทำข้อสอบ
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    correctAnswers = 0;
+    timeLeft = quiz.timeLimit;
+    userAnswers = [];
+    nextButton.disabled = true;
+    nextButton.style.display = "block";
+    restartButton.style.display = "none";
+    resultContainer.style.display = "none";
+    answerSheet.innerHTML = "";
+    timerDisplay.textContent = timeLeft;
+    loadQuestion();
+    startTimer();
+}
+
+// โหลดคำถาม
+function loadQuestion() {
+    const question = quiz.questions[currentQuestionIndex];
+    questionText.textContent = question.text;
+    choicesContainer.innerHTML = "";
+
+    question.choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.textContent = choice;
+        button.addEventListener("click", () => selectAnswer(button, choice, question.correct));
+        choicesContainer.appendChild(button);
+    });
+
+    nextButton.disabled = true;
+}
+
+// เลือกคำตอบ
+function selectAnswer(button, selected, correct) {
+    let buttons = choicesContainer.querySelectorAll("button");
+
+    // เคลียร์สีที่เลือกก่อนหน้า
+    buttons.forEach(btn => btn.classList.remove("selected"));
+    button.classList.add("selected");
+
+    // บันทึกคำตอบ
+    userAnswers[currentQuestionIndex] = { 
+        question: quiz.questions[currentQuestionIndex].text, 
+        selected, 
+        correct,
+        isCorrect: selected === correct 
+    };
+
+    nextButton.disabled = false;
+}
+
+// ไปยังคำถามถัดไป
+nextButton.addEventListener("click", () => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quiz.questions.length) {
+        loadQuestion();
+    } else {
+        endQuiz();
+    }
+});
+
+// เริ่มจับเวลา
+function startTimer() {
+    timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            endQuiz();
+        }
+    }, 1000);
+}
+
+// จบข้อสอบและแสดงคะแนน
+function endQuiz() {
+    clearInterval(timer);
+
+    // คำนวณคะแนนและจำนวนข้อที่ตอบถูก
+    correctAnswers = userAnswers.filter(ans => ans.isCorrect).length;
+    score = correctAnswers * 10; // ให้ 10 คะแนนต่อข้อ
+    let percentage = (score / (quiz.questions.length * 10)) * 100;
+
+    // แสดงผลลัพธ์
+    scoreText.innerHTML = `🎯 คุณตอบถูก <b>${correctAnswers}/${quiz.questions.length}</b> ข้อ<br>📊 คะแนนที่ได้: <b>${score}/${quiz.questions.length * 10} (${percentage}%)</b>`;
+    statusText.textContent = percentage >= quiz.passingScore ? "🎉 สอบผ่าน!" : "❌ สอบไม่ผ่าน!";
+
+    resultContainer.style.display = "block";
+    nextButton.style.display = "none";
+    restartButton.style.display = "block";
+
+    showAnswerSheet();
+}
+
+// แสดงเฉลยข้อสอบ
+function showAnswerSheet() {
+    answerSheet.innerHTML = "<h3>📌 เฉลยข้อสอบ</h3>";
+    userAnswers.forEach((ans, index) => {
+        let color = ans.isCorrect ? "green" : "red";
+        let answerHTML = `
+            <p style="color: ${color};">
+                <strong>ข้อที่ ${index + 1}:</strong> ${ans.question} <br>
+                ✅ คำตอบที่ถูกต้อง: <b>${ans.correct}</b> <br>
+                ${ans.isCorrect ? "✔ คุณตอบถูก!" : `❌ คุณตอบ: <b>${ans.selected}</b>`}
+            </p>
+            <hr>
+        `;
+        answerSheet.innerHTML += answerHTML;
+    });
+}
+
+// ปุ่มเริ่มใหม่
+restartButton.addEventListener("click", startQuiz);
+
+// เริ่มทำข้อสอบ
+startQuiz();
