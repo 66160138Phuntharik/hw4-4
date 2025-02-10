@@ -20,3 +20,28 @@ const allQuestions = [
     { id: 19, text: "ซอฟต์แวร์ประเภทใดใช้ป้องกันไวรัสคอมพิวเตอร์?", choices: ["Firewall", "Antivirus", "VPN", "Proxy"], correct: "Antivirus" },
     { id: 20, text: "อะไรคือที่อยู่ IP (IP Address)?", choices: ["เลขที่อยู่ของคอมพิวเตอร์ในเครือข่าย", "หน่วยความจำของ CPU", "โปรแกรมจัดการไฟล์", "รูปแบบการเข้ารหัส"], correct: "เลขที่อยู่ของคอมพิวเตอร์ในเครือข่าย" }
 ];
+
+// สุ่มคำถามอย่างน้อย 5 ข้อ จากทั้งหมด
+const quiz = {
+    questions: allQuestions.sort(() => 0.5 - Math.random()).slice(0,5),
+    timeLimit: 60,
+    passingScore: 60
+};
+
+let currentQuestionIndex = 0;
+let score = 0;
+let correctAnswers = 0;
+let timer;
+let timeLeft = quiz.timeLimit;
+let userAnswers = [];
+
+// อ้างอิง Element
+const questionText = document.getElementById("question-text");
+const choicesContainer = document.getElementById("choices");
+const nextButton = document.getElementById("next-btn");
+const restartButton = document.getElementById("restart-btn");
+const scoreText = document.getElementById("score");
+const statusText = document.getElementById("status");
+const resultContainer = document.getElementById("result-container");
+const timerDisplay = document.getElementById("timer");
+const answerSheet = document.getElementById("answer-sheet");
