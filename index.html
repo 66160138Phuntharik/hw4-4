@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แบบทดสอบความรู้</title>
+    <title>ระบบควิซออนไลน์</title>
 </head>
-
 <body>
+    <div class="container">
+        <h1>Quizz</h1>
+        <div class="quiz-container">
+            <p>เวลาที่เหลือ:</p>
+            <h2 id="question-text">กำลังโหลดคำถาม...</h2>
+            <div id="choices" class="choices-container"></div>
+        </div>
 
+        <div id="result-container" class="result-container">
+            <h2>ผลสอบ</h2>
+            <p id="score"></p>
+            <p id="status"></p>
+            <div id="answer-sheet"></div>
+        </div>
+    </div>
 </body>
-
 </html>
